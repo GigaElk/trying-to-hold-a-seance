@@ -64,7 +64,6 @@ function fillCard(c) {
 }
 function initPresets() {
   const box = $("presets");
-  const lbl = document.createElement("span"); lbl.textContent = "Or call a familiar spirit:"; box.appendChild(lbl);
   for (const p of window.SPIRITS) {
     const b = document.createElement("button"); b.type = "button"; b.textContent = p.label;
     b.onclick = () => { fillCard(p.card); S.preset = p; };
@@ -197,6 +196,10 @@ function startSeance() {
   $("sheetView").textContent = sheetText(S.spirit);
   updateCandle(); show("seance");
   addMsg("spirit", S.spirit.arrival_line, "spirit");
+  const cd = $("candle");
+  cd.classList.remove("arrive"); document.body.classList.remove("arrival"); void cd.offsetWidth;
+  cd.classList.add("arrive"); document.body.classList.add("arrival");
+  setTimeout(() => { cd.classList.remove("arrive"); document.body.classList.remove("arrival"); }, 1000);
   S.history.push({ role: "assistant", content: S.spirit.arrival_line });
   $("msg").focus();
 }
@@ -310,6 +313,7 @@ $("closeBtn").onclick = async () => {
 async function finish(spoke) {
   S.over = true; updateCandle();
   $("chatForm").classList.add("hidden"); $("closeBtn").classList.add("hidden");
+  await sleep(1000);
   $("dlBtn").classList.remove("hidden"); $("againBtn").classList.remove("hidden");
   addMsg("note", "The candle gutters and goes out. The séance is over.", "note");
   if (S.clippy.absent) addMsg("note", CLIPPY.absentNote, "note");
