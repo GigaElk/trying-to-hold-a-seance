@@ -1,7 +1,7 @@
 "use strict";
 // ---- Constants (edit me) ----
-const DEFAULT_MODEL = "qwen3:8b";
-const FALLBACK_MODELS = ["llama3.1:8b", "gemma3:4b"]; // gemma3:4b = low-end fallback
+const DEFAULT_MODEL = "gemma3:4b";
+const FALLBACK_MODELS = ["qwen3:8b", "llama3.1:8b"]; // untested alternatives
 const MAX_TURNS = 12;                                  // the candle
 const CLIPPY_MAX_REGULAR = 4;
 const GROUND_LIMIT = 6000;

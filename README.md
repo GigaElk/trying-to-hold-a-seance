@@ -10,7 +10,7 @@ Built for the DEV Hacktoberfest Open-Source AI Challenge, Week 4 — "Ghost in t
 
 - **Python 3.8+** (standard library only; no `pip install`, no Node, no build step).
 - **[Ollama](https://ollama.com)** running locally (default `http://127.0.0.1:11434`).
-- **At least one pulled model**: `qwen3:8b` (default), `llama3.1:8b`, or `gemma3:4b` (low-end fallback, about 3 GB).
+- **At least one pulled model**: `gemma3:4b` (default and the only tested model, about 3 GB). `qwen3:8b` and `llama3.1:8b` are supported alternatives but untested.
 - A modern browser (Chrome, Edge, Firefox, Safari).
 - Roughly 4 GB RAM/VRAM for `gemma3:4b`, about 8 GB for the 8B models. A GPU helps a lot.
 
@@ -22,7 +22,7 @@ cd trying-to-hold-a-seance
 python start.py
 ```
 
-`start.py` (or double-click `start.bat` on Windows, `./start.sh` on macOS/Linux) checks that Ollama is installed, starts it if it isn't running, offers to pull a model if you have none (`gemma3:4b` by default), starts the server and opens your browser. Options: `--model qwen3:8b`, `--port 9000`, `--no-browser`, `--yes` (don't ask before pulling). Ctrl+C closes everything it started.
+`start.py` (or double-click `start.bat` on Windows, `./start.sh` on macOS/Linux) checks that Ollama is installed, starts it if it isn't running, offers to pull a model if you have none (`gemma3:4b` by default), starts the server and opens your browser. Options: `--model <name>`, `--port 9000`, `--no-browser`, `--yes` (don't ask before pulling). Ctrl+C closes everything it started.
 
 Prefer doing it by hand? See Setup below.
 
@@ -31,9 +31,9 @@ Prefer doing it by hand? See Setup below.
 1. Install [Ollama](https://ollama.com) and make sure it is running.
 2. Pull a model (the app picks the first one it finds, in this order):
    ```
-   ollama pull qwen3:8b       # default
-   ollama pull llama3.1:8b    # alternative
-   ollama pull gemma3:4b      # low-end fallback
+   ollama pull gemma3:4b      # default, tested
+   ollama pull qwen3:8b       # alternative, untested
+   ollama pull llama3.1:8b    # alternative, untested
    ```
 3. Start the parlour (Python 3, standard library only — nothing to install):
    ```
@@ -43,7 +43,11 @@ Prefer doing it by hand? See Setup below.
 
 Options: `python server.py --port 9000`; `OLLAMA_HOST=host:port` if Ollama is elsewhere.
 
-**Tested model:** `gemma3:4b` only (Ollama on Windows, GPU): one generated spirit (GeoCities) and one full 12-turn séance with the MSN Messenger preset, driven in a browser. Replies were in character and streamed; the Forge returned valid JSON (the app flattens nested objects). The 4B model does sometimes invent details despite the honesty rule (it made up a friend's name), and replies took ~20–45 s here. `qwen3:8b` and `llama3.1:8b` are untested.
+**Tested model:** `gemma3:4b` only (Ollama on Windows, GPU). Run so far: a generated spirit (GeoCities), a grounded spirit from an uploaded file, and full 12-turn séances with the MSN Messenger and Internet Explorer presets, driven in a browser. The Forge returned valid JSON (the app flattens nested objects). `qwen3:8b` and `llama3.1:8b` are untested.
+
+**Latency and length:** séance replies are capped at about 80 words (system prompt) and `num_predict: 220`, at temperature 0.65. While waiting for the first token the candle flickers harder and "The spirit is gathering itself…" shows. In testing, warm replies took roughly 1.5–3.5 s (first reply ~12 s while the model loaded); the Internet Explorer preset is deliberately slower (per-token delay).
+
+**Honesty:** the spirit may only speak from its sheet and what you have told it. The prompt forbids inventing names, places or events and tells it to say the veil is cloudy and ask you to say more; a short reminder is sent every turn, and a stronger one (with the turns left) at turn 6. A 4B model can still occasionally slip, so treat this as strongly nudged, not guaranteed.
 
 ## How it works
 
@@ -65,7 +69,7 @@ A ghost hosted on someone else's server can be deprecated and switched off mid-c
 
 ## Status / known gaps
 
-- Verified: server smoke test (`python tests\smoke_test.py`, fake Ollama) and a live browser run with `gemma3:4b` (parlour check, Forge, streaming, candle, parting and lock, Clippy appearances/dismissals/final line). Not exercised: the "Let Clippy rest" toggle, transcript file download, grounding file upload and the Internet Explorer preset.
+- Verified: server smoke test (`python tests\smoke_test.py`, fake Ollama) and a live browser run with `gemma3:4b` (parlour check, Forge, streaming, candle, parting and lock, Clippy appearances/dismissals/final line). Also exercised with `gemma3:4b`: the "Let Clippy rest" toggle, transcript download, grounding file upload and the Internet Explorer preset.
 - The private "First Amiko" preset is intentionally not included.
 - Screenshots/GIF and demo video link are not included yet.
 - Clippy: the existential stage appears only if enough appearances occur (the cap and 4–5 turn spacing in a 12-turn séance make ~3 regular appearances typical, plus the final one). Lines are drafts; Andrew has final cut.

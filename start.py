@@ -16,7 +16,7 @@ import urllib.request
 import webbrowser
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PREFERRED = ["qwen3:8b", "llama3.1:8b", "gemma3:4b"]
+PREFERRED = ["gemma3:4b", "qwen3:8b", "llama3.1:8b"]
 host = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
 if "://" not in host:
     host = "http://" + host
