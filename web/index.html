@@ -20,6 +20,7 @@
 
   <section id="card" class="screen">
     <h2>The summoning card</h2>
+    <h3 class="presetsHead">Or call a familiar spirit</h3>
     <div class="presets" id="presets"></div>
     <form id="cardForm">
       <label>Who are you calling?<input name="name" required placeholder="MSN Messenger, GeoCities, my first Tamagotchi…"></label>
@@ -30,8 +31,10 @@
       <label>One thing you remember about them<textarea name="memory" rows="2" required></textarea></label>
       <label>One question you need answered (optional)<textarea name="question" rows="2"></textarea></label>
       <label>Ground the spirit in its own words (optional text file)<input type="file" id="ground" accept=".txt,.md,text/plain"></label>
-      <button class="primary" type="submit">Summon</button>
-      <label class="rest hidden" id="restCardWrap"><input type="checkbox" class="restBox"> Let Clippy rest</label>
+      <div class="summonRow">
+        <button class="primary" type="submit">Summon</button>
+        <label class="rest hidden" id="restCardWrap"><input type="checkbox" class="restBox"> Let Clippy rest</label>
+      </div>
     </form>
   </section>
 

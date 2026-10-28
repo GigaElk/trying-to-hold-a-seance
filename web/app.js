@@ -64,7 +64,6 @@ function fillCard(c) {
 }
 function initPresets() {
   const box = $("presets");
-  const lbl = document.createElement("span"); lbl.textContent = "Or call a familiar spirit:"; box.appendChild(lbl);
   for (const p of window.SPIRITS) {
     const b = document.createElement("button"); b.type = "button"; b.textContent = p.label;
     b.onclick = () => { fillCard(p.card); S.preset = p; };

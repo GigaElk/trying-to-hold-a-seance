@@ -21,7 +21,15 @@ button:disabled{opacity:.4;cursor:default}
 button.primary{background:#6b3b1f;border-color:#c98a4a}
 label{display:block;margin:.8em 0;color:var(--dim)}
 input,select,textarea{display:block;width:100%;margin-top:.25em;font:inherit;color:var(--ink);background:#150e1b;border:1px solid #4a3a55;border-radius:5px;padding:.5em}
-.presets{display:flex;gap:.5em;flex-wrap:wrap;margin:.6em 0}
+#card.screen.active{max-width:660px;margin:0 auto}
+#card h2{margin-bottom:.5em}
+.presetsHead{font-weight:normal;font-size:1rem;color:var(--dim);margin:0 0 .6em}
+.presets{display:grid;grid-template-columns:repeat(5,1fr);gap:.5em;margin:0 0 1.2em}
+.presets button{width:100%;min-height:3.2em;padding:.4em .5em;font-size:.85rem;line-height:1.2;text-align:center;display:flex;align-items:center;justify-content:center}
+@media (max-width:560px){.presets{grid-template-columns:repeat(2,1fr)}}
+#cardForm label{margin:0 0 1em}
+.summonRow{display:flex;align-items:center;gap:1em;margin-top:1.2em}
+#cardForm .summonRow .rest{margin:0;align-self:center}
 .rest{display:inline-flex;align-items:center;gap:.4em;font-size:.75rem;color:var(--dim);opacity:.75;margin:.4em 0 0;align-self:flex-start}.rest.hidden{display:none}.rest input{display:inline;width:auto}
 .actions .rest{margin:0 0 0 auto}
 .err{color:#e59a8a}
