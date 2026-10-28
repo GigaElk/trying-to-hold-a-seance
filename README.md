@@ -23,7 +23,7 @@ Built for the DEV Hacktoberfest Open-Source AI Challenge, Week 4 — "Ghost in t
 
 Options: `python server.py --port 9000`; `OLLAMA_HOST=host:port` if Ollama is elsewhere.
 
-**Tested models:** none yet against a live model by the build agent — the code was exercised only by the server smoke test against a scripted fake Ollama endpoint (see "Status"). Treat model behaviour (JSON quality, character drift) as unverified until you try it.
+**Tested model:** `gemma3:4b` only (Ollama on Windows, GPU): one generated spirit (GeoCities) and one full 12-turn séance with the MSN Messenger preset, driven in a browser. Replies were in character and streamed; the Forge returned valid JSON (the app flattens nested objects). The 4B model does sometimes invent details despite the honesty rule (it made up a friend's name), and replies took ~20–45 s here. `qwen3:8b` and `llama3.1:8b` are untested.
 
 ## How it works
 
@@ -45,7 +45,7 @@ A ghost hosted on someone else's server can be deprecated and switched off mid-c
 
 ## Status / known gaps
 
-- Verified: server proxy, streaming passthrough, static serving and path traversal (`python tests\smoke_test.py`, against a fake Ollama), and JS syntax. **Not** verified against real Ollama models, nor by running the UI in a browser.
+- Verified: server smoke test (`python tests\smoke_test.py`, fake Ollama) and a live browser run with `gemma3:4b` (parlour check, Forge, streaming, candle, parting and lock, Clippy appearances/dismissals/final line). Not exercised: the "Let Clippy rest" toggle, transcript file download, grounding file upload and the Internet Explorer preset.
 - The private "First Amiko" preset is intentionally not included.
 - Screenshots/GIF and demo video link are not included yet.
 - Clippy: the existential stage appears only if enough appearances occur (the cap and 4–5 turn spacing in a 12-turn séance make ~3 regular appearances typical, plus the final one). Lines are drafts; Andrew has final cut.
