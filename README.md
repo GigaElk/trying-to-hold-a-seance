@@ -52,7 +52,7 @@ Options: `python server.py --port 9000`; `OLLAMA_HOST=host:port` if Ollama is el
 ## How it works
 
 - **The parlour** checks `/api/tags` through the server's proxy and shows setup instructions if Ollama or the model is missing.
-- **The summoning card** collects name, kind, year of death, a seed memory and an optional question — or pick a preset spirit (MSN Messenger, Internet Explorer, which streams slowly via `delayMs`).
+- **The summoning card** collects name, kind, year of death, a seed memory and an optional question — or pick a preset spirit (MSN Messenger, Internet Explorer, Winamp, Netscape Navigator, Adobe Flash, Vine, the 14.4k Modem, Skype). Internet Explorer and the modem stream slowly via `delayMs`.
 - **The Spirit Forge** calls `/api/chat` once, non-streaming with `format: "json"`, to produce a spirit sheet (name, epithet, voice, tics, memories, unfinished business, temperament, arrival line).
 - **The séance** streams replies token by token. The system prompt is the séance rules + spirit sheet + the rules of the dead (first person, knows it is dead, only claims known memories — "the veil is cloudy there" — short replies, no breaking character).
 - **The candle** is 12 visitor turns (`MAX_TURNS`). Small local models drift out of character over long chats, so the limit becomes ritual. On the final turn (or "Close the séance") the spirit is told the candle is going out and gives a parting line; the chat then locks.
