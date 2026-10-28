@@ -46,22 +46,27 @@
   </section>
 
   <section id="seance" class="screen">
-    <div class="seanceHead">
-      <div class="candle small" id="candle"><div class="flame"></div><div class="wick"></div><div class="wax" id="wax"></div></div>
-      <div class="sheet"><h2 id="spName"></h2><p id="spEpithet"></p><p id="turns" class="turns"></p></div>
+    <header class="altar" id="altar">
+      <div class="candle small" id="candle"><div class="flame"></div><div class="wick"></div><div class="wax" id="wax"></div><div class="smoke"></div></div>
+      <div class="sheet"><h2 id="spName"></h2><p id="spEpithet"></p></div>
+      <p id="turns" class="turns" aria-live="polite"></p>
+    </header>
+    <div class="chatScroll" id="chatScroll">
+      <pre id="sheetView" class="hidden"></pre>
+      <div id="log" class="log"></div>
+    </div>
+    <footer class="dock">
+      <form id="chatForm" class="chatForm">
+        <input id="msg" autocomplete="off" placeholder="Speak to the dead…">
+        <button class="primary" id="send">Speak</button>
+      </form>
       <div class="actions">
         <button id="sheetBtn">Spirit sheet</button>
         <button id="closeBtn">Close the séance</button>
         <button id="dlBtn" class="hidden">Download the record</button>
         <button id="againBtn" class="hidden">Another séance</button>
       </div>
-    </div>
-    <pre id="sheetView" class="hidden"></pre>
-    <div id="log" class="log"></div>
-    <form id="chatForm" class="chatForm">
-      <input id="msg" autocomplete="off" placeholder="Speak to the dead…">
-      <button class="primary" id="send">Speak</button>
-    </form>
+    </footer>
   </section>
 </div>
 

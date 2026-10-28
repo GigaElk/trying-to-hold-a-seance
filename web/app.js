@@ -22,6 +22,8 @@ const S = {
 
 function show(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === id));
+  document.body.classList.toggle("in-seance", id === "seance");
+  if (id !== "seance") document.body.style.removeProperty("--dark");
 }
 
 // ---- Ollama connection check ----
@@ -209,14 +211,22 @@ function addMsg(cls, text, who) {
 }
 function updateCandle() {
   const left = MAX_TURNS - S.turns;
-  $("turns").textContent = S.over ? "The candle has gone out." : left + " of " + MAX_TURNS + " turns of candle remain";
-  $("wax").style.height = Math.max(8, (60 * left) / MAX_TURNS) + "px";
+  $("turns").textContent = S.over ? "The candle has gone out."
+    : left >= 9 ? "The candle stands tall."
+    : left >= 6 ? "The candle burns steadily."
+    : left >= 3 ? "The candle burns low."
+    : "The candle is guttering.";
+  $("turns").title = S.over ? "" : left + " of " + MAX_TURNS + " turns of candle remain";
+  const h = S.over ? 6 : 6 + (54 * left) / MAX_TURNS;
+  $("wax").style.height = h + "px";
   const c = $("candle");
-  c.querySelector(".wick").style.bottom = Math.max(8, (60 * left) / MAX_TURNS) + "px";
-  c.querySelector(".flame").style.bottom = Math.max(8, (60 * left) / MAX_TURNS) + 8 + "px";
-  c.classList.toggle("guttering", left <= 2);
-  c.style.opacity = S.over ? 0.5 : 1;
-  if (S.over) c.querySelector(".flame").style.display = "none";
+  c.querySelector(".wick").style.bottom = h + "px";
+  c.querySelector(".flame").style.bottom = h + 8 + "px";
+  c.querySelector(".smoke").style.bottom = h + 10 + "px";
+  c.classList.toggle("restless", !S.over && S.turns >= 8 && left > 2);
+  c.classList.toggle("guttering", !S.over && left <= 2);
+  c.classList.toggle("out", !!S.over);
+  document.body.style.setProperty("--dark", S.over ? 1 : (S.turns / MAX_TURNS).toFixed(3));
 }
 
 async function streamChat(messages, el, onFirst) {
