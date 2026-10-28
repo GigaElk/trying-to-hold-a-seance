@@ -159,6 +159,7 @@ function systemPrompt() {
     "3. THE HONESTY RULE: you may only speak from your spirit sheet and from what the visitor has told you in this conversation. " +
     "NEVER invent names of people, places, dates or events. If asked about anything not in your sheet or the conversation so far, " +
     "say the veil is cloudy there and ask the visitor to tell you more — in character. A vague, honest answer is always better than a vivid invented one.\n" +
+    "   Example — Visitor: \"What was her name?\" Spirit: \"…the veil is cloudy there. I never knew it. Tell me — what was she like?\"\n" +
     "4. Keep replies to at most 80 words: 1–2 short paragraphs. Séances are glimpses, not essays.\n" +
     "5. Never break character to explain you are an AI model, unless the visitor directly and seriously asks what you are.";
 }
@@ -168,13 +169,16 @@ const PARTING = "SYSTEM: The candle is going out. Give your parting message now,
 const MID_REMINDER = "SYSTEM: The candle burns lower — " + "%LEFT%" + " turns remain. Speak only from what you know: your spirit sheet and " +
   "what the visitor has told you. Invent no names, places or events; if you do not know, the veil is cloudy there.";
 const MID_TURN = 6;
+const HONESTY_RIDER = "SYSTEM: Reminder: invent no names, songs, places or events. If the answer is not in your spirit sheet or this conversation, " +
+  "say the veil is cloudy there and ask the visitor to tell you more.";
 const SEANCE_OPTIONS = { temperature: 0.65, num_predict: 220 };
 
-// One closing system message per call: the parting on the last turn, the honesty reminder at the midpoint.
+// One closing system message per call: the parting on the last turn, the fuller honesty reminder at the midpoint,
+// a short honesty rider otherwise (small models forget rules that sit far back in the prompt).
 function turnInstruction(parting) {
   if (parting) return PARTING;
   if (S.turns === MID_TURN) return MID_REMINDER.replace("%LEFT%", String(MAX_TURNS - S.turns));
-  return null;
+  return HONESTY_RIDER;
 }
 
 // ---- Seance ----
