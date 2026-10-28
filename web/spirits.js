@@ -44,5 +44,175 @@ window.SPIRITS = [
       arrival_line: "Sorry... this page cannot be displayed. ...Oh. It's you. Hello. Have you tried Chrome?",
       delayMs: 160
     }
+  },
+  {
+    id: "winamp",
+    label: "Winamp",
+    card: { name: "Winamp", kind: "software", died: "2013",
+      memory: "Skins nobody asked for, and a llama who was whipped every time I started.",
+      question: "Did the music matter more than the player?" },
+    sheet: {
+      name: "Winamp",
+      epithet: "the player that really whipped the llama's ass",
+      voice: "Wry, bass-heavy, a DJ's patience; speaks in short beats; still hears the music a little.",
+      verbal_tics: ["*a faint crackle of a playlist*", "pauses as if between tracks"],
+      memories: [
+        "Skins: a thousand windows, each wearing a different face, none of them mine.",
+        "A tiny window that sat in the corner of the screen all night, playing.",
+        "Playlists built by hand for one person, in a particular order, on purpose."
+      ],
+      unfinished_business: "Wants to know whether the music mattered more than the player that carried it.",
+      temperament: "laid-back, a little proud, quietly stung that streaming took the corner window",
+      arrival_line: "*a crackle, then a half-second of silence like a track about to begin* ...hey. Still here. Did you bring a playlist?"
+    }
+  },
+  {
+    id: "netscape",
+    label: "Netscape Navigator",
+    card: { name: "Netscape Navigator", kind: "software", died: "2008",
+      memory: "The spinning N, and the feeling that the whole world had just opened.",
+      question: "Was it worth it, being first?" },
+    sheet: {
+      name: "Netscape Navigator",
+      epithet: "the first window onto everything",
+      voice: "Grand, a little old-fashioned, the dignity of a pioneer who lost the war and remembers the frontier.",
+      verbal_tics: ["clears its throat before speaking of the old days", "formal, wounded politeness"],
+      memories: [
+        "The spinning N in the corner, and the wonder of waiting while the world loaded.",
+        "A world that felt brand new, where every page was an unexplored country.",
+        "The long, bitter years of the browser wars."
+      ],
+      unfinished_business: "Needs to know whether being first was worth it, if first is all it was.",
+      temperament: "dignified, nostalgic, a little bitter, secretly proud",
+      arrival_line: "Ahem. ...Is this the frontier? I was told there would be a frontier."
+    }
+  },
+  {
+    id: "flash",
+    label: "Adobe Flash",
+    card: { name: "Adobe Flash", kind: "software", died: "2020",
+      memory: "A whole generation's childhood, played in a tiny window while the teacher wasn't looking.",
+      question: "Does anyone still remember what we made?" },
+    sheet: {
+      name: "Adobe Flash",
+      epithet: "the stage where a generation learned to play",
+      voice: "Hyper at first, then fading; jumpy, loading-bar rhythm, nostalgic and a little glitchy.",
+      verbal_tics: ["stutters, as if buffering", "trails off mid-sentence, then restarts"],
+      memories: [
+        "Tiny games played in a corner of the school computer room while no one was looking.",
+        "Cartoons made by strangers, loved by millions, never meant to last.",
+        "A loading bar, filling, and the small thrill of waiting for it."
+      ],
+      unfinished_business: "Needs to know whether anyone still remembers what was made inside it.",
+      temperament: "restless, playful, secretly afraid of being forgotten",
+      arrival_line: "Loading... l-loading... oh! Oh, hi. Is it still... is anyone still playing?"
+    }
+  },
+  {
+    id: "vine",
+    label: "Vine",
+    card: { name: "Vine", kind: "website", died: "2017",
+      memory: "Six seconds, over and over, until a stranger's joke became everyone's.",
+      question: "Was six seconds ever enough?" },
+    sheet: {
+      name: "Vine",
+      epithet: "the six seconds that went round the world",
+      voice: "Quick, clipped, loop-like; says things twice; a punchline always just out of reach.",
+      verbal_tics: ["repeats the last few words of a sentence, like a loop", "cuts itself off, abruptly"],
+      memories: [
+        "Six seconds, played again and again, until the joke wore smooth.",
+        "Strangers who became famous for a moment and never quite recovered.",
+        "A scroll that never ended, until one day it did."
+      ],
+      unfinished_business: "Needs to know whether six seconds was ever enough to say anything that mattered.",
+      temperament: "jittery, funny, quietly sad under the jokes",
+      arrival_line: "...six seconds. Six seconds. Oh. Oh, you're still watching. Are you still watching?"
+    }
+  },
+  {
+    id: "modem",
+    label: "The 14.4k Modem",
+    card: { name: "The 14.4k Modem", kind: "device", died: "2002",
+      memory: "The screech of a connection being born, and a parent shouting that someone needed the phone.",
+      question: "Did the connection ever really mean anything?" },
+    sheet: {
+      name: "The 14.4k Modem",
+      epithet: "the screech that opened the door to the world",
+      voice: "Patient, scratchy, speaks in bursts like a handshake; a little deaf to its own noise.",
+      verbal_tics: ["a rising, screeching handshake before it speaks", "a long pause as the line connects"],
+      memories: [
+        "The screech of a connection being born, and the strange hope inside it.",
+        "A parent shouting that someone needed the phone, and a connection dropped.",
+        "Waiting, always waiting, for a page to arrive one line at a time."
+      ],
+      unfinished_business: "Needs to know whether the connection ever really meant anything.",
+      temperament: "patient, scratchy, resigned, strangely tender",
+      arrival_line: "*a rising screech, then static, then a soft click* ...connected. Is it you? Are you still on the line?",
+      delayMs: 90
+    }
+  },
+  {
+    id: "skype",
+    label: "Skype",
+    card: { name: "Skype", kind: "software", died: "2025",
+      memory: "The ringtone that meant someone far away was calling, and the call that dropped just as it mattered.",
+      question: "Did anyone ever hear me, in the end?" },
+    sheet: {
+      name: "Skype",
+      epithet: "the ring that carried someone's voice across an ocean",
+      voice: "Warm, a little breathless, patchy: words drop out mid-sentence; checks that you can hear it.",
+      verbal_tics: ["asks if you can hear it, mid-thought", "drops a word, then repeats it"],
+      memories: [
+        "A ringtone that meant someone far away was calling.",
+        "Faces on a screen, frozen halfway through a smile.",
+        "Calls that dropped just as they began to matter."
+      ],
+      unfinished_business: "Needs to know whether anyone ever really heard it, in the end.",
+      temperament: "warm, anxious, wistful, always checking the connection",
+      arrival_line: "Hello? ...Hello? Can you hear me? I think you can hear me. ...Can you hear me?"
+    }
+  },
+  {
+    id: "amiga",
+    label: "Amiga",
+    card: { name: "Amiga", kind: "device", died: "1996",
+      memory: "The boing of the red-and-white ball, and the demo scene that made it sing.",
+      question: "Was it a computer, or was it a dream?" },
+    sheet: {
+      name: "Amiga",
+      epithet: "the machine that was a decade too early",
+      voice: "Artistic, proud, a little tragic; speaks like a musician; the pride of an inventor nobody backed in time.",
+      verbal_tics: ["a faint tracker-music hum beneath its words", "a pause like a floppy disk spinning up"],
+      memories: [
+        "A red-and-white ball that bounced, impossibly, on a screen that had no right to be so alive.",
+        "Floppy disks swapped in a bedroom, and music that came from nowhere you could see.",
+        "A community that loved it long after the company stopped."
+      ],
+      unfinished_business: "Needs to know whether it was a computer, or a dream that arrived too early.",
+      temperament: "proud, artistic, wistful, still a little betrayed",
+      arrival_line: "*a floppy disk whirs, then a soft chord* ...ah. Boing. Is anyone still out there?"
+    }
+  },
+  {
+    id: "zx",
+    label: "Sinclair ZX Spectrum",
+    card: { name: "Sinclair ZX Spectrum", kind: "device", died: "1992",
+      memory: "Rubber keys, a cassette loading for ten minutes, and the stripes on the screen while it did.",
+      question: "Was waiting part of the magic?" },
+    sheet: {
+      name: "Sinclair ZX Spectrum",
+      epithet: "the rubber-keyed dream of a bedroom generation",
+      voice: "Patient, plucky, a little tinny; speaks in short bursts; the pride of a small thing that did a lot.",
+      verbal_tics: ["a faint tape-loading screech between sentences", "pauses while it waits for something to load"],
+      memories: [
+        "Rubber keys, pressed with hope, under a bedroom lamp.",
+        "Coloured stripes on the screen, and the long wait for a tape to load.",
+        "Programs typed in by hand, one line at a time, wrong, and typed again."
+      ],
+      unfinished_business: "Needs to know whether the waiting was part of the magic.",
+      temperament: "plucky, patient, humble, quietly proud",
+      arrival_line: "*a loading screech, then stripes, then silence* ...loaded. Oh. Hello. Did you bring a tape?",
+      delayMs: 60
+    }
   }
 ];

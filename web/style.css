@@ -22,7 +22,8 @@ button.primary{background:#6b3b1f;border-color:#c98a4a}
 label{display:block;margin:.8em 0;color:var(--dim)}
 input,select,textarea{display:block;width:100%;margin-top:.25em;font:inherit;color:var(--ink);background:#150e1b;border:1px solid #4a3a55;border-radius:5px;padding:.5em}
 .presets{display:flex;gap:.5em;flex-wrap:wrap;margin:.6em 0}
-.rest input{display:inline;width:auto}
+.rest{display:inline-flex;align-items:center;gap:.4em;font-size:.75rem;color:var(--dim);opacity:.75;margin:.4em 0 0;align-self:flex-start}.rest.hidden{display:none}.rest input{display:inline;width:auto}
+.actions .rest{margin:0 0 0 auto}
 .err{color:#e59a8a}
 
 .candle{position:relative;margin:0 auto;width:30px}
@@ -100,6 +101,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 .clippy .body{padding:8px}.clippy .body p{margin:0 0 6px}
 .cbtns{display:flex;gap:6px;flex-wrap:wrap}
 .cbtns button{background:#ece9d8;color:#000;border:2px outset #fff;border-radius:0;font:12px Tahoma,sans-serif;padding:2px 10px}
-.clippy.zombie svg #wire{stroke:#7a9a5a}
-.clippy.zombie svg{filter:hue-rotate(40deg) saturate(1.5) drop-shadow(0 0 4px #4a6)}
+.clippy[data-stage="1"] svg{filter:saturate(.6) brightness(1.08)}
+.clippy[data-stage="2"] svg{filter:hue-rotate(40deg) saturate(1.8) brightness(1.02) drop-shadow(0 0 2px #6a8)}
+.clippy[data-stage="3"] svg{filter:hue-rotate(40deg) saturate(1.5) drop-shadow(0 0 3px #4a6)}
+.clippy[data-stage="4"] svg{filter:hue-rotate(45deg) saturate(2.2) brightness(.85) drop-shadow(0 0 5px #4a6)}
+.clippy[data-stage="3"] svg #wire,.clippy[data-stage="4"] svg #wire{stroke:#7a9a5a}
+.clippy[data-stage="2"] svg #wire{stroke:#8a9a8f}
+.clippy[data-stage="4"] svg #wire{stroke:#4f7a3a}
 @keyframes bounceIn{0%{transform:translateY(140%)}60%{transform:translateY(-12px)}80%{transform:translateY(4px)}100%{transform:none}}

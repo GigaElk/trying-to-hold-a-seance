@@ -8,10 +8,6 @@
 </head>
 <body>
 <div id="app">
-  <div class="topbar">
-    <label class="rest"><input type="checkbox" id="letRest"> Let Clippy rest</label>
-  </div>
-
   <section id="parlour" class="screen active">
     <div class="candle big"><div class="flame"></div><div class="wick"></div><div class="wax"></div></div>
     <h1>It Looks Like You're Trying to Hold a Séance</h1>
@@ -35,6 +31,7 @@
       <label>One question you need answered (optional)<textarea name="question" rows="2"></textarea></label>
       <label>Ground the spirit in its own words (optional text file)<input type="file" id="ground" accept=".txt,.md,text/plain"></label>
       <button class="primary" type="submit">Summon</button>
+      <label class="rest hidden" id="restCardWrap"><input type="checkbox" class="restBox"> Let Clippy rest</label>
     </form>
   </section>
 
@@ -65,6 +62,7 @@
         <button id="closeBtn">Close the séance</button>
         <button id="dlBtn" class="hidden">Download the record</button>
         <button id="againBtn" class="hidden">Another séance</button>
+        <label class="rest hidden" id="restDockWrap"><input type="checkbox" class="restBox"> Let Clippy rest</label>
       </div>
     </footer>
   </section>
@@ -72,12 +70,12 @@
 
 <div id="clippy" class="clippy hidden" aria-live="polite">
   <div class="win">
-    <div class="title"><span>Office Assistant</span><button id="clippyX" title="Close">✕</button></div>
+    <div class="title"><span id="clippyTitle">Office Assistant</span><button id="clippyX" title="Close">✕</button></div>
     <div class="body"><p id="clippyText"></p><div id="clippyBtns" class="cbtns"></div></div>
   </div>
   <svg id="clippySvg" viewBox="0 0 80 120" width="80" height="120" aria-hidden="true">
     <path id="wire" d="M30 20 C30 5 55 5 55 22 L55 85 C55 108 25 108 25 85 L25 35 C25 25 42 25 42 35 L42 80" fill="none" stroke="#8a9099" stroke-width="5" stroke-linecap="round"/>
-    <path id="scar" d="M33 60 L48 66" stroke="#2b3a20" stroke-width="2" stroke-dasharray="3 2" class="hidden"/>
+    <path id="scar" d="M50 48 L60 56 M60 48 L50 56 M50 64 L60 72 M60 64 L50 72 M50 80 L60 88 M60 80 L50 88 M55 44 L55 90" stroke="#0f1a09" stroke-width="2.4" stroke-linecap="round" fill="none" class="hidden"/>
     <g id="eyes">
       <ellipse cx="33" cy="32" rx="7" ry="8" fill="#fff" stroke="#333"/><circle cx="34" cy="33" r="3" fill="#111"/>
       <ellipse id="eyeR" cx="50" cy="32" rx="7" ry="8" fill="#fff" stroke="#333"/><circle id="pupR" cx="51" cy="33" r="3" fill="#111"/>

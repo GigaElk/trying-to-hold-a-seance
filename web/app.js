@@ -100,8 +100,8 @@ $("cardForm").addEventListener("submit", async (e) => {
 // ---- Spirit Forge ----
 const FORGE_SYSTEM = "You are the keeper of the veil. From this description of the dead, forge a spirit. " +
   "Reply with JSON only, using exactly these keys: name, epithet (a short phrase such as 'the messenger who carried a million first crushes'), " +
-  "voice (how it speaks: era, register, quirks), verbal_tics (array of 2 short strings), " +
-  "memories (array of 3 strings: the visitor's seed memory expanded, plus two more plausible memories from its era), " +
+  "voice (how it speaks: era, register, quirks), verbal_tics (array of AT MOST 2 short strings: mannerisms of speech such as pauses, crackle, hesitations or formality that fit the spirit's era and a gothic, hushed séance register; NOT catchphrases or slogans), " +
+  "memories (array of 3 strings: the visitor's seed memory expanded, plus two more feelings or atmospheres from its era. For famous or public subjects, lean on what the visitor supplied plus era atmosphere and feeling; do NOT name specific levels, features, songs, products or people unless the visitor supplied them), " +
   "unfinished_business (what it still wants or needs), temperament (a few words such as 'warm, a little vain, still hurt about being replaced'), " +
   "arrival_line (its first words on being summoned, in character). Keep every value brief.\n\n";
 async function forgeSpirit(card) {
@@ -136,7 +136,7 @@ function normalizeSheet(j, card) {
   const arr = (v) => (Array.isArray(v) ? v.map(str) : v ? [str(v)] : []);
   const s = {
     name: str(j.name || card.name), epithet: str(j.epithet || "the departed"),
-    voice: str(j.voice || "quiet, old-fashioned"), verbal_tics: arr(j.verbal_tics),
+    voice: str(j.voice || "quiet, old-fashioned"), verbal_tics: arr(j.verbal_tics).slice(0, 2),
     memories: arr(j.memories), unfinished_business: str(j.unfinished_business || "unknown"),
     temperament: str(j.temperament || "wistful"),
     arrival_line: str(j.arrival_line || "…is someone there?"),
@@ -186,7 +186,9 @@ function turnInstruction(parting) {
 // ---- Seance ----
 function startSeance() {
   S.history = []; S.record = []; S.turns = 0; S.over = false;
-  S.clippy = { count: 0, nextAt: 2, shownFinal: false, banished: $("letRest").checked, open: false, lastTurn: -9 };
+  S.clippy = { count: 0, nextAt: 2, shownFinal: false, banished: flag("clippy_resting"), open: false, lastTurn: -9, used: new Set(), met: false };
+  syncRest();
+  S.clippy.absent = !S.clippy.banished && Math.random() < CLIPPY.absenceChance;
   hideClippy();
   $("log").innerHTML = ""; $("sheetView").classList.add("hidden");
   $("dlBtn").classList.add("hidden"); $("againBtn").classList.add("hidden");
@@ -310,7 +312,8 @@ async function finish(spoke) {
   $("chatForm").classList.add("hidden"); $("closeBtn").classList.add("hidden");
   $("dlBtn").classList.remove("hidden"); $("againBtn").classList.remove("hidden");
   addMsg("note", "The candle gutters and goes out. The séance is over.", "note");
-  if (!S.clippy.banished && !S.clippy.shownFinal && S.turns >= MAX_TURNS - 1) {
+  if (S.clippy.absent) addMsg("note", CLIPPY.absentNote, "note");
+  else if (!S.clippy.banished && !S.clippy.shownFinal && S.turns >= MAX_TURNS - 1) {
     await sleep(1200); showClippy("final");
   }
 }
@@ -339,9 +342,14 @@ $("dlBtn").onclick = () => {
 function clippyLog(text) { S.record.push({ who: "clippy", text }); }
 async function maybeClippy(text) {
   const C = S.clippy;
-  if (C.banished || C.open || C.count >= CLIPPY_MAX_REGULAR) return;
+  if (C.banished || C.absent || C.open) return;
   if (S.turns >= MAX_TURNS) return;
   const t = text.toLowerCase();
+  if (!C.asideDone && /\b(thank you|thanks|goodbye|good bye|farewell)\b/.test(t)) {
+    C.asideDone = true;
+    if (Math.random() < CLIPPY.asideChance) return showClippy("aside");
+  }
+  if (C.count >= CLIPPY_MAX_REGULAR) return;
   if (/\bhelp\b/.test(t)) return showClippy("help");
   let go = false;
   if (S.turns >= C.nextAt) go = true;
@@ -350,22 +358,60 @@ async function maybeClippy(text) {
   }
   if (go) showClippy("regular");
 }
+// Lines are drawn from pools: never repeated within a séance, and unheard lines first across séances.
+const CLIPPY_LS = "seance.clippy.used";
+function loadUsed() { try { return new Set(JSON.parse(localStorage.getItem(CLIPPY_LS) || "[]")); } catch (_) { return new Set(); } }
+function saveUsed(s) { try { localStorage.setItem(CLIPPY_LS, JSON.stringify([...s])); } catch (_) {} }
+function lineId(key, t) { let h = 5381; for (const ch of t) h = ((h << 5) + h + ch.codePointAt(0)) >>> 0; return key + ":" + h.toString(36); }
+function drawLine(key, pool) {
+  const C = S.clippy; C.used = C.used || new Set();
+  const used = loadUsed();
+  let cand = pool.filter((t) => !C.used.has(lineId(key, t)));
+  if (!cand.length) cand = pool.slice();
+  let fresh = cand.filter((t) => !used.has(lineId(key, t)));
+  if (!fresh.length) { pool.forEach((t) => used.delete(lineId(key, t))); fresh = cand; }
+  const t = pick(fresh), id = lineId(key, t);
+  used.add(id); C.used.add(id); saveUsed(used);
+  return t.replace(/\{name\}/g, S.spirit.name).replace(/\{year\}/g, yearOf(S.card.died) || "that year").replace(/\{kind\}/g, S.card.kind || "thing");
+}
+function yearOf(d) { const m = String(d || "").match(/\b(1[89]\d\d|20\d\d)\b/); return m ? m[1] : ""; }
+function hookPool(C) {
+  const roll = () => Math.random() < CLIPPY.hookChance;
+  if (S.grounding && !C.quietDone && C.count >= 2) { C.quietDone = true; return "quiet"; }
+  const y = +yearOf(S.card.died);
+  if (!C.eraDone && y && (y < 2007 || y > 2013) && roll()) { C.eraDone = true; return y < 2007 ? "knewThem" : "junior"; }
+  if (!C.proxDone && ["software", "website", "game"].includes(S.card.kind) && roll()) { C.proxDone = true; return "proximity"; }
+  return null;
+}
 async function showClippy(kind) {
   const C = S.clippy, box = $("clippy"), txt = $("clippyText"), btns = $("clippyBtns");
-  let set, line, stage;
-  if (kind === "final") { set = CLIPPY.final; C.shownFinal = true; line = pick(set.lines); }
-  else {
-    stage = CLIPPY.stages[Math.min(C.count, CLIPPY.stages.length - 1)];
-    set = stage; line = kind === "help" ? CLIPPY.help : C.feelings ? CLIPPY.feelings : pick(stage.lines);
+  C.met = true; setFlag("clippy_seen", true); syncRest();
+  let line, yesPool, xPool, yesKey, xKey;
+  const si = Math.min(C.count, CLIPPY.stages.length - 1);
+  const setDismiss = (i) => { yesKey = "dismissYes." + i; xKey = "dismissX." + i; yesPool = CLIPPY.dismissYes[i]; xPool = CLIPPY.dismissX[i]; };
+  if (kind === "final") {
+    C.shownFinal = true; line = drawLine("final", CLIPPY.final);
+    yesKey = xKey = "finalDismiss"; yesPool = xPool = CLIPPY.finalDismiss;
+  } else if (kind === "aside") {
+    line = drawLine("aside", CLIPPY.aside); setDismiss(si);
+  } else {
+    setDismiss(si);
+    const hook = kind === "regular" && !C.feelings && si >= 1 ? hookPool(C) : null;
+    if (hook === "quiet") { yesKey = xKey = "quietDismiss"; yesPool = xPool = CLIPPY.quietDismiss; }
+    line = hook ? drawLine(hook, CLIPPY[hook])
+      : kind === "help" ? drawLine("help", CLIPPY.help)
+      : C.feelings ? drawLine("feelings", CLIPPY.feelings) : drawLine("stage." + si, CLIPPY.stages[si]);
     C.count++; C.feelings = false;
     C.nextAt = S.turns + rnd(4, 5);
   }
-  C.lastTurn = S.turns; C.open = true; C.set = set; C.dismissed = false;
+  C.lastTurn = S.turns; C.open = true; C.dp = { yesKey, xKey, yesPool, xPool }; C.dismissed = false;
   const tok = C.tok = (C.tok || 0) + 1;
-  const zombie = kind === "final" || C.count >= 3;
-  box.classList.toggle("zombie", zombie);
-  $("scar").classList.toggle("hidden", !zombie); $("xEye").classList.toggle("hidden", !zombie);
-  $("eyeR").style.display = $("pupR").style.display = zombie ? "none" : "";
+  const stageNo = kind === "aside" ? Math.max(1, Math.min(C.appear || 0, 4)) : Math.min(C.appear = (C.appear || 0) + 1, 4);
+  box.dataset.stage = stageNo;
+  box.classList.toggle("zombie", stageNo >= 4);
+  $("clippyTitle").textContent = ["Office Assistant", "Office Assistant (Retired)", "Office Assistant (Deceased)", "Office Assistant (Do Not Resuscitate)"][stageNo - 1];
+  $("scar").classList.toggle("hidden", stageNo < 3); $("xEye").classList.toggle("hidden", stageNo < 4);
+  $("eyeR").style.display = $("pupR").style.display = stageNo >= 4 ? "none" : "";
   txt.textContent = "…"; btns.innerHTML = ""; box.classList.remove("hidden");
   box.style.animation = "none"; void box.offsetWidth; box.style.animation = "";
   await sleep(900);
@@ -379,7 +425,7 @@ async function dismissClippy(viaYes) {
   const C = S.clippy;
   if (!C.open || C.dismissed) return;
   C.dismissed = true;
-  const line = viaYes && C.set && C.set.dismiss ? pick(C.set.dismiss) : pick(CLIPPY.woundedDismiss);
+  const line = viaYes ? drawLine(C.dp.yesKey, C.dp.yesPool) : drawLine(C.dp.xKey, C.dp.xPool);
   $("clippyText").textContent = line; $("clippyBtns").innerHTML = ""; clippyLog(line);
   const tok = C.tok;
   await sleep(2200);
@@ -388,17 +434,33 @@ async function dismissClippy(viaYes) {
 function hideClippy() { S.clippy.open = false; $("clippy").classList.add("hidden"); }
 $("clippyX").onclick = () => dismissClippy(false);
 
-$("letRest").addEventListener("change", async (e) => {
-  S.clippy.banished = e.target.checked;
-  if (!e.target.checked || S.thanked) return;
-  S.thanked = true;
-  const C = S.clippy;
-  const tok = C.tok = (C.tok || 0) + 1;
+const flag = (k) => { try { return localStorage.getItem(k) === "1"; } catch (_) { return false; } };
+const setFlag = (k, v) => { try { localStorage.setItem(k, v ? "1" : "0"); } catch (_) {} };
+// The rest control stays hidden until Clippy has been met (this session, or in a previous visit).
+function syncRest() {
+  const resting = flag("clippy_resting");
+  document.querySelectorAll(".restBox").forEach((b) => { b.checked = resting; });
+  $("restCardWrap").classList.toggle("hidden", !flag("clippy_seen"));
+  $("restDockWrap").classList.toggle("hidden", !(S.clippy && S.clippy.met));
+}
+
+async function clippySay(text, ms) {
+  const C = S.clippy, tok = C.tok = (C.tok || 0) + 1;
   C.open = true; C.dismissed = true;
-  $("clippy").classList.remove("hidden", "zombie");
-  $("clippyText").textContent = CLIPPY.banished; $("clippyBtns").innerHTML = ""; clippyLog(CLIPPY.banished);
-  await sleep(3500);
+  $("clippy").classList.remove("hidden", "zombie"); $("clippy").dataset.stage = 1; $("clippyTitle").textContent = "Office Assistant";
+  $("scar").classList.add("hidden"); $("xEye").classList.add("hidden"); $("eyeR").style.display = $("pupR").style.display = "";
+  $("clippyText").textContent = text; $("clippyBtns").innerHTML = ""; clippyLog(text);
+  await sleep(ms);
   if (C.tok === tok) hideClippy();
-});
+}
+document.querySelectorAll(".restBox").forEach((box) => box.addEventListener("change", async (e) => {
+  const on = e.target.checked, C = S.clippy;
+  setFlag("clippy_resting", on); syncRest();
+  if (!C || !$("seance").classList.contains("active")) return;
+  C.banished = on;
+  if (on && !S.thanked) { S.thanked = true; await clippySay(CLIPPY.banished, 3500); }
+  else if (!on && !S.woken && !C.absent && !S.over) { S.woken = true; await clippySay(drawLine("woken", CLIPPY.woken), 3000); }
+}));
+syncRest();
 initPresets();
 checkOllama();
