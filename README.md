@@ -91,3 +91,6 @@ MIT — see [LICENSE](LICENSE).
 
 Small effects: a one-time arrival flare, a smoke wisp and one-second silence when the candle dies, a hard-edged Clippy window that pops in, warm chip hover/focus, and a paperclip favicon. All motion is disabled under `prefers-reduced-motion`. There is no sound.
 
+
+**Trial: bokeh orbs.** Faint drifting candlelight orbs sit at the page edges. Switch them with `?bokeh=off` / `?bokeh=on` (remembered), or delete the `bokeh.js` script line in `web/index.html`. They are off under reduced motion.
+

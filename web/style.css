@@ -129,7 +129,14 @@ body.arrival::before{animation:arrivalPulse .9s ease-out 1}
 .presets button:hover,.presets button:focus-visible{border-color:#c98a4a;background:#33243a;box-shadow:0 0 14px 2px rgba(255,170,60,.28),inset 0 0 10px rgba(255,170,60,.12);outline:none}
 .presets button:focus-visible{outline:2px solid #e6b36a;outline-offset:2px}
 
+#bokeh{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#bokeh i{position:absolute;border-radius:50%;opacity:var(--o,.08);filter:blur(14px);
+ background:radial-gradient(circle,rgba(255,190,110,.9),rgba(255,150,60,.35) 55%,rgba(255,130,40,0) 72%);
+ animation:bokehDrift 45s ease-in-out infinite alternate}
+#bokeh.paused i{animation-play-state:paused}
+@keyframes bokehDrift{from{transform:translate(0,0)}to{transform:translate(var(--dx),var(--dy))}}
 @media (prefers-reduced-motion:reduce){
+#bokeh{display:none}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .candle.out .smoke{opacity:.5}
 }
