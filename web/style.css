@@ -100,6 +100,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 .clippy .body{padding:8px}.clippy .body p{margin:0 0 6px}
 .cbtns{display:flex;gap:6px;flex-wrap:wrap}
 .cbtns button{background:#ece9d8;color:#000;border:2px outset #fff;border-radius:0;font:12px Tahoma,sans-serif;padding:2px 10px}
-.clippy.zombie svg #wire{stroke:#7a9a5a}
-.clippy.zombie svg{filter:hue-rotate(40deg) saturate(1.5) drop-shadow(0 0 4px #4a6)}
+.clippy[data-stage="1"] svg{filter:saturate(.6) brightness(1.08)}
+.clippy[data-stage="2"] svg{filter:hue-rotate(40deg) saturate(1.8) brightness(1.02) drop-shadow(0 0 2px #6a8)}
+.clippy[data-stage="3"] svg{filter:hue-rotate(40deg) saturate(1.5) drop-shadow(0 0 3px #4a6)}
+.clippy[data-stage="4"] svg{filter:hue-rotate(45deg) saturate(2.2) brightness(.85) drop-shadow(0 0 5px #4a6)}
+.clippy[data-stage="3"] svg #wire,.clippy[data-stage="4"] svg #wire{stroke:#7a9a5a}
+.clippy[data-stage="2"] svg #wire{stroke:#8a9a8f}
+.clippy[data-stage="4"] svg #wire{stroke:#4f7a3a}
 @keyframes bounceIn{0%{transform:translateY(140%)}60%{transform:translateY(-12px)}80%{transform:translateY(4px)}100%{transform:none}}

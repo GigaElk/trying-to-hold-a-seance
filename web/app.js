@@ -362,10 +362,12 @@ async function showClippy(kind) {
   }
   C.lastTurn = S.turns; C.open = true; C.set = set; C.dismissed = false;
   const tok = C.tok = (C.tok || 0) + 1;
-  const zombie = kind === "final" || C.count >= 3;
-  box.classList.toggle("zombie", zombie);
-  $("scar").classList.toggle("hidden", !zombie); $("xEye").classList.toggle("hidden", !zombie);
-  $("eyeR").style.display = $("pupR").style.display = zombie ? "none" : "";
+  const stageNo = Math.min(C.appear = (C.appear || 0) + 1, 4);
+  box.dataset.stage = stageNo;
+  box.classList.toggle("zombie", stageNo >= 4);
+  $("clippyTitle").textContent = ["Office Assistant", "Office Assistant (Retired)", "Office Assistant (Deceased)", "Office Assistant (Do Not Resuscitate)"][stageNo - 1];
+  $("scar").classList.toggle("hidden", stageNo < 3); $("xEye").classList.toggle("hidden", stageNo < 4);
+  $("eyeR").style.display = $("pupR").style.display = stageNo >= 4 ? "none" : "";
   txt.textContent = "…"; btns.innerHTML = ""; box.classList.remove("hidden");
   box.style.animation = "none"; void box.offsetWidth; box.style.animation = "";
   await sleep(900);
@@ -395,7 +397,8 @@ $("letRest").addEventListener("change", async (e) => {
   const C = S.clippy;
   const tok = C.tok = (C.tok || 0) + 1;
   C.open = true; C.dismissed = true;
-  $("clippy").classList.remove("hidden", "zombie");
+  $("clippy").classList.remove("hidden", "zombie"); $("clippy").dataset.stage = 1; $("clippyTitle").textContent = "Office Assistant";
+  $("scar").classList.add("hidden"); $("xEye").classList.add("hidden"); $("eyeR").style.display = $("pupR").style.display = "";
   $("clippyText").textContent = CLIPPY.banished; $("clippyBtns").innerHTML = ""; clippyLog(CLIPPY.banished);
   await sleep(3500);
   if (C.tok === tok) hideClippy();
