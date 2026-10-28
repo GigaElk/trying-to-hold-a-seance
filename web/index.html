@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>It Looks Like You're Trying to Hold a Séance</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <div class="topbar">
+    <label class="rest"><input type="checkbox" id="letRest"> Let Clippy rest</label>
+  </div>
+
+  <section id="parlour" class="screen active">
+    <div class="candle big"><div class="flame"></div><div class="wick"></div><div class="wax"></div></div>
+    <h1>It Looks Like You're Trying to Hold a Séance</h1>
+    <p class="premise">Summon something digital that died and left you with questions. A local ghost, in your machine, for as long as the candle lasts.</p>
+    <div id="status" class="status">Checking the veil…</div>
+    <div id="setup" class="setup hidden"></div>
+    <button id="begin" class="primary" disabled>Begin the séance</button>
+    <p class="privacy">Nothing you say to the dead leaves this computer.</p>
+  </section>
+
+  <section id="card" class="screen">
+    <h2>The summoning card</h2>
+    <div class="presets" id="presets"></div>
+    <form id="cardForm">
+      <label>Who are you calling?<input name="name" required placeholder="MSN Messenger, GeoCities, my first Tamagotchi…"></label>
+      <label>What were they?
+        <select name="kind"><option>software</option><option>website</option><option>AI</option><option>game</option><option>device</option><option>other</option></select>
+      </label>
+      <label>When did they die?<input name="died" placeholder="2013"></label>
+      <label>One thing you remember about them<textarea name="memory" rows="2" required></textarea></label>
+      <label>One question you need answered (optional)<textarea name="question" rows="2"></textarea></label>
+      <label>Ground the spirit in its own words (optional text file)<input type="file" id="ground" accept=".txt,.md,text/plain"></label>
+      <button class="primary" type="submit">Summon</button>
+    </form>
+  </section>
+
+  <section id="summoning" class="screen">
+    <div class="candle big flare"><div class="flame"></div><div class="wick"></div><div class="wax"></div></div>
+    <h2>The veil thins…</h2>
+    <p id="summonErr" class="err hidden"></p>
+    <button id="summonBack" class="hidden">Back to the card</button>
+  </section>
+
+  <section id="seance" class="screen">
+    <header class="altar" id="altar">
+      <div class="candle small" id="candle"><div class="flame"></div><div class="wick"></div><div class="wax" id="wax"></div><div class="smoke"></div></div>
+      <div class="sheet"><h2 id="spName"></h2><p id="spEpithet"></p></div>
+      <p id="turns" class="turns" aria-live="polite"></p>
+    </header>
+    <div class="chatScroll" id="chatScroll">
+      <pre id="sheetView" class="hidden"></pre>
+      <div id="log" class="log"></div>
+    </div>
+    <footer class="dock">
+      <form id="chatForm" class="chatForm">
+        <input id="msg" autocomplete="off" placeholder="Speak to the dead…">
+        <button class="primary" id="send">Speak</button>
+      </form>
+      <div class="actions">
+        <button id="sheetBtn">Spirit sheet</button>
+        <button id="closeBtn">Close the séance</button>
+        <button id="dlBtn" class="hidden">Download the record</button>
+        <button id="againBtn" class="hidden">Another séance</button>
+      </div>
+    </footer>
+  </section>
+</div>
+
+<div id="clippy" class="clippy hidden" aria-live="polite">
+  <div class="win">
+    <div class="title"><span>Office Assistant</span><button id="clippyX" title="Close">✕</button></div>
+    <div class="body"><p id="clippyText"></p><div id="clippyBtns" class="cbtns"></div></div>
+  </div>
+  <svg id="clippySvg" viewBox="0 0 80 120" width="80" height="120" aria-hidden="true">
+    <path id="wire" d="M30 20 C30 5 55 5 55 22 L55 85 C55 108 25 108 25 85 L25 35 C25 25 42 25 42 35 L42 80" fill="none" stroke="#8a9099" stroke-width="5" stroke-linecap="round"/>
+    <path id="scar" d="M33 60 L48 66" stroke="#2b3a20" stroke-width="2" stroke-dasharray="3 2" class="hidden"/>
+    <g id="eyes">
+      <ellipse cx="33" cy="32" rx="7" ry="8" fill="#fff" stroke="#333"/><circle cx="34" cy="33" r="3" fill="#111"/>
+      <ellipse id="eyeR" cx="50" cy="32" rx="7" ry="8" fill="#fff" stroke="#333"/><circle id="pupR" cx="51" cy="33" r="3" fill="#111"/>
+      <path id="xEye" d="M44 26 L56 38 M56 26 L44 38" stroke="#111" stroke-width="2.5" class="hidden"/>
+    </g>
+  </svg>
+</div>
+
+<script src="spirits.js"></script>
+<script src="clippy.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

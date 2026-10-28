@@ -1,0 +1,105 @@
+:root{--ink:#e8dcc0;--dim:#9a8f78;--bg:#0b0710}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:Georgia,"Palatino Linotype",serif;
+ background:radial-gradient(ellipse at 50% 20%,#2a1a2e 0%,#120a18 45%,#050308 100%)}
+#app{max-width:720px;margin:0 auto;padding:16px 20px 80px}
+.topbar{text-align:right;font-size:.8rem;color:var(--dim)}
+.screen{display:none}.screen.active{display:block}
+.hidden{display:none!important}
+h1{text-align:center;font-weight:normal;letter-spacing:.04em;font-size:2rem;margin:.4em 0}
+h2{font-weight:normal;margin:.2em 0}
+.premise,.privacy{text-align:center;color:var(--dim)}
+.privacy{font-size:.85rem;margin-top:2em}
+#parlour,#summoning{text-align:center}
+.status{margin:1.2em 0;padding:.6em;border:1px solid #3b2d44;border-radius:6px;color:var(--dim)}
+.status.ok{color:#b9d9a0}.status.bad{color:#e59a8a}
+.setup{text-align:left;background:#1a1220;border:1px solid #3b2d44;padding:1em 1.4em;border-radius:6px;margin-bottom:1em}
+.setup code{background:#000;padding:2px 6px;border-radius:3px}
+button{font:inherit;color:var(--ink);background:#2a1e33;border:1px solid #5a4668;border-radius:5px;padding:.5em 1em;cursor:pointer}
+button:hover:not(:disabled){background:#3a2a47}
+button:disabled{opacity:.4;cursor:default}
+button.primary{background:#6b3b1f;border-color:#c98a4a}
+label{display:block;margin:.8em 0;color:var(--dim)}
+input,select,textarea{display:block;width:100%;margin-top:.25em;font:inherit;color:var(--ink);background:#150e1b;border:1px solid #4a3a55;border-radius:5px;padding:.5em}
+.presets{display:flex;gap:.5em;flex-wrap:wrap;margin:.6em 0}
+.rest input{display:inline;width:auto}
+.err{color:#e59a8a}
+
+.candle{position:relative;margin:0 auto;width:30px}
+.candle.big{height:150px;margin-top:20px}
+.candle .wax{position:absolute;bottom:0;left:0;width:30px;height:100px;background:linear-gradient(90deg,#d8c9a2,#f3e7c6 50%,#cdbb90);border-radius:4px 4px 2px 2px;transition:height .8s}
+.candle .wick{position:absolute;left:14px;width:2px;height:10px;background:#222;bottom:100px}
+.candle .flame{position:absolute;left:7px;bottom:108px;width:16px;height:30px;background:radial-gradient(ellipse at 50% 70%,#fff6c0,#ffb830 55%,rgba(255,120,0,0) 75%);
+ border-radius:50% 50% 50% 50%/60% 60% 40% 40%;box-shadow:0 0 30px 12px rgba(255,170,50,.35);transform-origin:50% 100%;animation:flicker 1.6s infinite ease-in-out}
+.candle.flare .flame{animation:flicker .3s infinite;transform:scale(1.6)}
+.candle.small{width:30px;height:80px;margin:0;flex:none}
+.candle.small .wax{height:60px;max-height:60px}
+.candle.small .wick{bottom:60px}
+.candle.small .flame{bottom:68px;transform:scale(.7)}
+.candle.guttering .flame{animation:gutter .5s infinite}
+.candle.waiting .flame{animation:flicker .25s infinite;transform:scale(1.15)}
+.msg.waiting{color:var(--dim);animation:pulse 1.4s infinite ease-in-out}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes flicker{0%,100%{transform:scale(1,1) rotate(-1deg);opacity:1}30%{transform:scale(.94,1.06) rotate(2deg);opacity:.92}60%{transform:scale(1.04,.95) rotate(-2deg);opacity:1}}
+@keyframes gutter{0%{transform:scale(.45,.55) rotate(-9deg);opacity:.6}18%{transform:scale(.3,.35) rotate(7deg);opacity:.25}35%{transform:scale(.6,.8) rotate(-14deg);opacity:1}55%{transform:scale(.35,.4) rotate(10deg);opacity:.3}75%{transform:scale(.55,.7) rotate(-6deg);opacity:.9}100%{transform:scale(.4,.5) rotate(12deg);opacity:.4}}
+
+.seanceHead{display:none}.sheet{flex:1;min-width:0}.sheet h2{font-size:1.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sheet p{margin:.1em 0;color:var(--dim);font-size:.9rem}
+.actions{display:flex;gap:.4em;flex-wrap:wrap;margin-top:.5em}.actions button{font-size:.8rem;padding:.3em .8em}
+pre#sheetView{white-space:pre-wrap;background:#150e1b;border:1px solid #3b2d44;padding:.8em;border-radius:6px;font-size:.85rem;margin:0 0 .8em}
+
+/* Séance frame: fixed-height app, pinned altar bar, only the chat scrolls */
+body.in-seance{height:100dvh;overflow:hidden}
+body.in-seance #app{height:100dvh;display:flex;flex-direction:column;padding:0 20px;position:relative;z-index:1}
+body.in-seance .topbar{padding:2px 0;font-size:.72rem;flex:none}
+body.in-seance #seance.active{display:flex;flex-direction:column;flex:1;min-height:0}
+.altar{position:relative;z-index:20;flex:none;display:flex;align-items:flex-end;gap:1.2em;padding:22px 8px 8px;border-bottom:1px solid #3b2d44;background:rgba(10,6,14,.82)}
+.altar::before{content:"";position:absolute;left:-100px;top:-60px;width:380px;height:300px;pointer-events:none;
+ background:radial-gradient(circle 170px at 123px 95px,rgba(255,170,60,.4),rgba(255,140,40,.14) 50%,rgba(255,120,30,0) 100%);opacity:calc(1 - var(--dark,0)*.55)}
+.altar:has(.candle.waiting)::before{animation:glowPulse 1.6s infinite ease-in-out}
+.altar:has(.candle.out)::before{opacity:0;transition:opacity 1.5s}
+.altar>*{position:relative}
+.altar .turns{margin:0;color:var(--dim);font-style:italic;text-align:right;max-width:14em;align-self:center}
+.chatScroll{flex:1;min-height:0;overflow-y:auto;padding:.8em 0;scrollbar-color:#4a3a55 transparent;scrollbar-width:thin}
+.dock{flex:none;padding:.6em 0 10px}
+.log{margin:0;display:flex;flex-direction:column;gap:.8em}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:var(--dark,0);transition:opacity 1.5s;
+ background:radial-gradient(ellipse at 20% 0%,rgba(0,0,0,.25),rgba(0,0,0,.85) 100%)}
+.candle.small{zoom:1}
+.candle .smoke{position:absolute;left:14px;width:2px;height:40px;opacity:0;pointer-events:none;border-radius:2px;
+ background:linear-gradient(to top,rgba(200,200,210,.55),rgba(200,200,210,0));filter:blur(1.5px)}
+.candle.out .flame{display:none}
+.candle.out .smoke{animation:smoke 4s infinite ease-out}
+.candle.restless .flame{animation:flicker .55s infinite ease-in-out}
+.candle.guttering .flame{animation:gutter .7s infinite steps(7,end)}
+.candle.waiting .flame{animation:flicker .25s infinite;transform:scale(1.15)}
+@keyframes glowPulse{0%,100%{filter:brightness(.8)}50%{filter:brightness(1.6)}}
+@keyframes smoke{0%{opacity:.8;transform:translate(0,0) scaleY(.4)}60%{opacity:.5;transform:translate(5px,-18px) scaleY(1)}100%{opacity:0;transform:translate(-4px,-40px) scaleY(1.2)}}
+@media (max-width:600px){
+ body.in-seance #app{padding:0 10px}
+ .candle.small{zoom:.75}
+ .altar{align-items:center;gap:.7em;padding:4px 6px}
+ .altar .sheet p{display:none}
+ .altar .sheet h2{font-size:1.05rem}
+ .altar .turns{font-size:.78rem;max-width:8em}
+ .actions button{font-size:.72rem;padding:.25em .6em}
+ .clippy{right:6px;bottom:6px}body .clippy .win{width:210px}
+ body .clippy svg{width:56px;height:84px}
+}
+@media (max-height:520px){.clippy{zoom:.7}}
+.msg{padding:.6em .9em;border-radius:8px;white-space:pre-wrap;line-height:1.45}
+.msg.you{align-self:flex-end;background:#2b2236;max-width:85%}
+.msg.spirit{background:#1a1420;border-left:3px solid #c98a4a;font-style:italic;animation:manifest 1.2s ease-out}
+.msg.note{align-self:center;color:var(--dim);font-size:.85rem;font-style:italic}
+@keyframes manifest{from{opacity:.2;filter:blur(3px);letter-spacing:.12em}to{opacity:1;filter:none;letter-spacing:normal}}
+.chatForm{display:flex;gap:.5em}.chatForm input{margin:0}
+
+.clippy{position:fixed;right:16px;bottom:16px;z-index:10;display:flex;flex-direction:column;align-items:flex-end;gap:2px;animation:bounceIn .6s}
+.clippy .win{width:260px;background:#ece9d8;color:#000;border:2px solid #0a246a;font:13px Tahoma,Verdana,sans-serif;box-shadow:3px 3px 0 rgba(0,0,0,.5)}
+.clippy .title{background:linear-gradient(90deg,#0a246a,#3a6ea5);color:#fff;padding:2px 4px;display:flex;justify-content:space-between;align-items:center}
+.clippy .title button{padding:0 6px;font-size:11px;background:#ece9d8;color:#000;border:1px outset #fff;border-radius:0}
+.clippy .body{padding:8px}.clippy .body p{margin:0 0 6px}
+.cbtns{display:flex;gap:6px;flex-wrap:wrap}
+.cbtns button{background:#ece9d8;color:#000;border:2px outset #fff;border-radius:0;font:12px Tahoma,sans-serif;padding:2px 10px}
+.clippy.zombie svg #wire{stroke:#7a9a5a}
+.clippy.zombie svg{filter:hue-rotate(40deg) saturate(1.5) drop-shadow(0 0 4px #4a6)}
+@keyframes bounceIn{0%{transform:translateY(140%)}60%{transform:translateY(-12px)}80%{transform:translateY(4px)}100%{transform:none}}
