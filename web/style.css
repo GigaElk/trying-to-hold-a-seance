@@ -1,0 +1,64 @@
+:root{--ink:#e8dcc0;--dim:#9a8f78;--bg:#0b0710}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:Georgia,"Palatino Linotype",serif;
+ background:radial-gradient(ellipse at 50% 20%,#2a1a2e 0%,#120a18 45%,#050308 100%)}
+#app{max-width:720px;margin:0 auto;padding:16px 20px 80px}
+.topbar{text-align:right;font-size:.8rem;color:var(--dim)}
+.screen{display:none}.screen.active{display:block}
+.hidden{display:none!important}
+h1{text-align:center;font-weight:normal;letter-spacing:.04em;font-size:2rem;margin:.4em 0}
+h2{font-weight:normal;margin:.2em 0}
+.premise,.privacy{text-align:center;color:var(--dim)}
+.privacy{font-size:.85rem;margin-top:2em}
+#parlour,#summoning{text-align:center}
+.status{margin:1.2em 0;padding:.6em;border:1px solid #3b2d44;border-radius:6px;color:var(--dim)}
+.status.ok{color:#b9d9a0}.status.bad{color:#e59a8a}
+.setup{text-align:left;background:#1a1220;border:1px solid #3b2d44;padding:1em 1.4em;border-radius:6px;margin-bottom:1em}
+.setup code{background:#000;padding:2px 6px;border-radius:3px}
+button{font:inherit;color:var(--ink);background:#2a1e33;border:1px solid #5a4668;border-radius:5px;padding:.5em 1em;cursor:pointer}
+button:hover:not(:disabled){background:#3a2a47}
+button:disabled{opacity:.4;cursor:default}
+button.primary{background:#6b3b1f;border-color:#c98a4a}
+label{display:block;margin:.8em 0;color:var(--dim)}
+input,select,textarea{display:block;width:100%;margin-top:.25em;font:inherit;color:var(--ink);background:#150e1b;border:1px solid #4a3a55;border-radius:5px;padding:.5em}
+.presets{display:flex;gap:.5em;flex-wrap:wrap;margin:.6em 0}
+.rest input{display:inline;width:auto}
+.err{color:#e59a8a}
+
+.candle{position:relative;margin:0 auto;width:30px}
+.candle.big{height:150px;margin-top:20px}
+.candle .wax{position:absolute;bottom:0;left:0;width:30px;height:100px;background:linear-gradient(90deg,#d8c9a2,#f3e7c6 50%,#cdbb90);border-radius:4px 4px 2px 2px;transition:height .8s}
+.candle .wick{position:absolute;left:14px;width:2px;height:10px;background:#222;bottom:100px}
+.candle .flame{position:absolute;left:7px;bottom:108px;width:16px;height:30px;background:radial-gradient(ellipse at 50% 70%,#fff6c0,#ffb830 55%,rgba(255,120,0,0) 75%);
+ border-radius:50% 50% 50% 50%/60% 60% 40% 40%;box-shadow:0 0 30px 12px rgba(255,170,50,.35);transform-origin:50% 100%;animation:flicker 1.6s infinite ease-in-out}
+.candle.flare .flame{animation:flicker .3s infinite;transform:scale(1.6)}
+.candle.small{width:30px;height:80px;margin:0;flex:none}
+.candle.small .wax{height:60px;max-height:60px}
+.candle.small .wick{bottom:60px}
+.candle.small .flame{bottom:68px;transform:scale(.7)}
+.candle.guttering .flame{animation:gutter .5s infinite}
+@keyframes flicker{0%,100%{transform:scale(1,1) rotate(-1deg);opacity:1}30%{transform:scale(.94,1.06) rotate(2deg);opacity:.92}60%{transform:scale(1.04,.95) rotate(-2deg);opacity:1}}
+@keyframes gutter{0%,100%{transform:scale(.4,.5);opacity:.5}50%{transform:scale(.7,.9) rotate(5deg);opacity:1}70%{opacity:.2}}
+
+.seanceHead{display:flex;gap:1em;align-items:flex-end;flex-wrap:wrap}
+.sheet{flex:1;min-width:180px}.sheet p{margin:.1em 0;color:var(--dim)}
+.actions{display:flex;gap:.4em;flex-wrap:wrap}
+pre#sheetView{white-space:pre-wrap;background:#150e1b;border:1px solid #3b2d44;padding:.8em;border-radius:6px;font-size:.85rem}
+.log{margin:1em 0;display:flex;flex-direction:column;gap:.8em}
+.msg{padding:.6em .9em;border-radius:8px;white-space:pre-wrap;line-height:1.45}
+.msg.you{align-self:flex-end;background:#2b2236;max-width:85%}
+.msg.spirit{background:#1a1420;border-left:3px solid #c98a4a;font-style:italic;animation:manifest 1.2s ease-out}
+.msg.note{align-self:center;color:var(--dim);font-size:.85rem;font-style:italic}
+@keyframes manifest{from{opacity:.2;filter:blur(3px);letter-spacing:.12em}to{opacity:1;filter:none;letter-spacing:normal}}
+.chatForm{display:flex;gap:.5em}.chatForm input{margin:0}
+
+.clippy{position:fixed;right:16px;bottom:16px;z-index:10;display:flex;flex-direction:column;align-items:flex-end;gap:2px;animation:bounceIn .6s}
+.clippy .win{width:260px;background:#ece9d8;color:#000;border:2px solid #0a246a;font:13px Tahoma,Verdana,sans-serif;box-shadow:3px 3px 0 rgba(0,0,0,.5)}
+.clippy .title{background:linear-gradient(90deg,#0a246a,#3a6ea5);color:#fff;padding:2px 4px;display:flex;justify-content:space-between;align-items:center}
+.clippy .title button{padding:0 6px;font-size:11px;background:#ece9d8;color:#000;border:1px outset #fff;border-radius:0}
+.clippy .body{padding:8px}.clippy .body p{margin:0 0 6px}
+.cbtns{display:flex;gap:6px;flex-wrap:wrap}
+.cbtns button{background:#ece9d8;color:#000;border:2px outset #fff;border-radius:0;font:12px Tahoma,sans-serif;padding:2px 10px}
+.clippy.zombie svg #wire{stroke:#7a9a5a}
+.clippy.zombie svg{filter:hue-rotate(40deg) saturate(1.5) drop-shadow(0 0 4px #4a6)}
+@keyframes bounceIn{0%{transform:translateY(140%)}60%{transform:translateY(-12px)}80%{transform:translateY(4px)}100%{transform:none}}
