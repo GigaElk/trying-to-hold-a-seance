@@ -19,11 +19,12 @@ Built for the DEV Hacktoberfest Open-Source AI Challenge, Week 4 — "Ghost in t
 ```
 git clone https://github.com/GigaElk/trying-to-hold-a-seance.git
 cd trying-to-hold-a-seance
-ollama pull gemma3:4b
-python server.py
+python start.py
 ```
 
-Then open <http://127.0.0.1:8000>. The parlour screen tells you whether Ollama and a model were found.
+`start.py` (or double-click `start.bat` on Windows, `./start.sh` on macOS/Linux) checks that Ollama is installed, starts it if it isn't running, offers to pull a model if you have none (`gemma3:4b` by default), starts the server and opens your browser. Options: `--model qwen3:8b`, `--port 9000`, `--no-browser`, `--yes` (don't ask before pulling). Ctrl+C closes everything it started.
+
+Prefer doing it by hand? See Setup below.
 
 ## Setup
 
