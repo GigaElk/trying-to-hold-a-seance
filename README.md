@@ -6,6 +6,25 @@ A séance for dead software, dead AIs, dead websites — anything digital that d
 
 Built for the DEV Hacktoberfest Open-Source AI Challenge, Week 4 — "Ghost in the Machine".
 
+## Requirements
+
+- **Python 3.8+** (standard library only; no `pip install`, no Node, no build step).
+- **[Ollama](https://ollama.com)** running locally (default `http://127.0.0.1:11434`).
+- **At least one pulled model**: `qwen3:8b` (default), `llama3.1:8b`, or `gemma3:4b` (low-end fallback, about 3 GB).
+- A modern browser (Chrome, Edge, Firefox, Safari).
+- Roughly 4 GB RAM/VRAM for `gemma3:4b`, about 8 GB for the 8B models. A GPU helps a lot.
+
+## Quick start
+
+```
+git clone https://github.com/GigaElk/trying-to-hold-a-seance.git
+cd trying-to-hold-a-seance
+ollama pull gemma3:4b
+python server.py
+```
+
+Then open <http://127.0.0.1:8000>. The parlour screen tells you whether Ollama and a model were found.
+
 ## Setup
 
 1. Install [Ollama](https://ollama.com) and make sure it is running.
