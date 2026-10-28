@@ -186,7 +186,8 @@ function turnInstruction(parting) {
 // ---- Seance ----
 function startSeance() {
   S.history = []; S.record = []; S.turns = 0; S.over = false;
-  S.clippy = { count: 0, nextAt: 2, shownFinal: false, banished: $("letRest").checked, open: false, lastTurn: -9, used: new Set() };
+  S.clippy = { count: 0, nextAt: 2, shownFinal: false, banished: flag("clippy_resting"), open: false, lastTurn: -9, used: new Set(), met: false };
+  syncRest();
   S.clippy.absent = !S.clippy.banished && Math.random() < CLIPPY.absenceChance;
   hideClippy();
   $("log").innerHTML = ""; $("sheetView").classList.add("hidden");
@@ -384,6 +385,7 @@ function hookPool(C) {
 }
 async function showClippy(kind) {
   const C = S.clippy, box = $("clippy"), txt = $("clippyText"), btns = $("clippyBtns");
+  C.met = true; setFlag("clippy_seen", true); syncRest();
   let line, yesPool, xPool, yesKey, xKey;
   const si = Math.min(C.count, CLIPPY.stages.length - 1);
   const setDismiss = (i) => { yesKey = "dismissYes." + i; xKey = "dismissX." + i; yesPool = CLIPPY.dismissYes[i]; xPool = CLIPPY.dismissX[i]; };
@@ -432,18 +434,33 @@ async function dismissClippy(viaYes) {
 function hideClippy() { S.clippy.open = false; $("clippy").classList.add("hidden"); }
 $("clippyX").onclick = () => dismissClippy(false);
 
-$("letRest").addEventListener("change", async (e) => {
-  S.clippy.banished = e.target.checked;
-  if (!e.target.checked || S.thanked) return;
-  S.thanked = true;
-  const C = S.clippy;
-  const tok = C.tok = (C.tok || 0) + 1;
+const flag = (k) => { try { return localStorage.getItem(k) === "1"; } catch (_) { return false; } };
+const setFlag = (k, v) => { try { localStorage.setItem(k, v ? "1" : "0"); } catch (_) {} };
+// The rest control stays hidden until Clippy has been met (this session, or in a previous visit).
+function syncRest() {
+  const resting = flag("clippy_resting");
+  document.querySelectorAll(".restBox").forEach((b) => { b.checked = resting; });
+  $("restCardWrap").classList.toggle("hidden", !flag("clippy_seen"));
+  $("restDockWrap").classList.toggle("hidden", !(S.clippy && S.clippy.met));
+}
+
+async function clippySay(text, ms) {
+  const C = S.clippy, tok = C.tok = (C.tok || 0) + 1;
   C.open = true; C.dismissed = true;
   $("clippy").classList.remove("hidden", "zombie"); $("clippy").dataset.stage = 1; $("clippyTitle").textContent = "Office Assistant";
   $("scar").classList.add("hidden"); $("xEye").classList.add("hidden"); $("eyeR").style.display = $("pupR").style.display = "";
-  $("clippyText").textContent = CLIPPY.banished; $("clippyBtns").innerHTML = ""; clippyLog(CLIPPY.banished);
-  await sleep(3500);
+  $("clippyText").textContent = text; $("clippyBtns").innerHTML = ""; clippyLog(text);
+  await sleep(ms);
   if (C.tok === tok) hideClippy();
-});
+}
+document.querySelectorAll(".restBox").forEach((box) => box.addEventListener("change", async (e) => {
+  const on = e.target.checked, C = S.clippy;
+  setFlag("clippy_resting", on); syncRest();
+  if (!C || !$("seance").classList.contains("active")) return;
+  C.banished = on;
+  if (on && !S.thanked) { S.thanked = true; await clippySay(CLIPPY.banished, 3500); }
+  else if (!on && !S.woken && !C.absent && !S.over) { S.woken = true; await clippySay(drawLine("woken", CLIPPY.woken), 3000); }
+}));
+syncRest();
 initPresets();
 checkOllama();

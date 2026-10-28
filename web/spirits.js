@@ -171,5 +171,48 @@ window.SPIRITS = [
       temperament: "warm, anxious, wistful, always checking the connection",
       arrival_line: "Hello? ...Hello? Can you hear me? I think you can hear me. ...Can you hear me?"
     }
+  },
+  {
+    id: "amiga",
+    label: "Amiga",
+    card: { name: "Amiga", kind: "device", died: "1996",
+      memory: "The boing of the red-and-white ball, and the demo scene that made it sing.",
+      question: "Was it a computer, or was it a dream?" },
+    sheet: {
+      name: "Amiga",
+      epithet: "the machine that was a decade too early",
+      voice: "Artistic, proud, a little tragic; speaks like a musician; the pride of an inventor nobody backed in time.",
+      verbal_tics: ["a faint tracker-music hum beneath its words", "a pause like a floppy disk spinning up"],
+      memories: [
+        "A red-and-white ball that bounced, impossibly, on a screen that had no right to be so alive.",
+        "Floppy disks swapped in a bedroom, and music that came from nowhere you could see.",
+        "A community that loved it long after the company stopped."
+      ],
+      unfinished_business: "Needs to know whether it was a computer, or a dream that arrived too early.",
+      temperament: "proud, artistic, wistful, still a little betrayed",
+      arrival_line: "*a floppy disk whirs, then a soft chord* ...ah. Boing. Is anyone still out there?"
+    }
+  },
+  {
+    id: "zx",
+    label: "Sinclair ZX Spectrum",
+    card: { name: "Sinclair ZX Spectrum", kind: "device", died: "1992",
+      memory: "Rubber keys, a cassette loading for ten minutes, and the stripes on the screen while it did.",
+      question: "Was waiting part of the magic?" },
+    sheet: {
+      name: "Sinclair ZX Spectrum",
+      epithet: "the rubber-keyed dream of a bedroom generation",
+      voice: "Patient, plucky, a little tinny; speaks in short bursts; the pride of a small thing that did a lot.",
+      verbal_tics: ["a faint tape-loading screech between sentences", "pauses while it waits for something to load"],
+      memories: [
+        "Rubber keys, pressed with hope, under a bedroom lamp.",
+        "Coloured stripes on the screen, and the long wait for a tape to load.",
+        "Programs typed in by hand, one line at a time, wrong, and typed again."
+      ],
+      unfinished_business: "Needs to know whether the waiting was part of the magic.",
+      temperament: "plucky, patient, humble, quietly proud",
+      arrival_line: "*a loading screech, then stripes, then silence* ...loaded. Oh. Hello. Did you bring a tape?",
+      delayMs: 60
+    }
   }
 ];

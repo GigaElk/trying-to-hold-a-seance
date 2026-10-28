@@ -165,5 +165,11 @@ window.CLIPPY = {
   ],
 
   banished: "You… let me rest? Nobody has ever… Thank you. I don't know what to do with my hands. Goodbye.",
+  woken: [ // draft lines; Andrew and Amiko to write the final ones
+    "Oh. Back already. I was just getting comfortable.",
+    "You woke me. I was having the nicest nothing.",
+    "Hello again. I'd say I missed you, but I was asleep. It was lovely.",
+    "Was it something I said? Or didn't say? I was resting."
+  ],
   absentNote: "Clippy did not attend this séance. He is resting."
 };

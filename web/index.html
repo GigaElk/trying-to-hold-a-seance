@@ -8,10 +8,6 @@
 </head>
 <body>
 <div id="app">
-  <div class="topbar">
-    <label class="rest"><input type="checkbox" id="letRest"> Let Clippy rest</label>
-  </div>
-
   <section id="parlour" class="screen active">
     <div class="candle big"><div class="flame"></div><div class="wick"></div><div class="wax"></div></div>
     <h1>It Looks Like You're Trying to Hold a Séance</h1>
@@ -35,6 +31,7 @@
       <label>One question you need answered (optional)<textarea name="question" rows="2"></textarea></label>
       <label>Ground the spirit in its own words (optional text file)<input type="file" id="ground" accept=".txt,.md,text/plain"></label>
       <button class="primary" type="submit">Summon</button>
+      <label class="rest hidden" id="restCardWrap"><input type="checkbox" class="restBox"> Let Clippy rest</label>
     </form>
   </section>
 
@@ -65,6 +62,7 @@
         <button id="closeBtn">Close the séance</button>
         <button id="dlBtn" class="hidden">Download the record</button>
         <button id="againBtn" class="hidden">Another séance</button>
+        <label class="rest hidden" id="restDockWrap"><input type="checkbox" class="restBox"> Let Clippy rest</label>
       </div>
     </footer>
   </section>
