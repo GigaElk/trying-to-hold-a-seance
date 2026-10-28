@@ -37,6 +37,9 @@ input,select,textarea{display:block;width:100%;margin-top:.25em;font:inherit;col
 .candle.small .wick{bottom:60px}
 .candle.small .flame{bottom:68px;transform:scale(.7)}
 .candle.guttering .flame{animation:gutter .5s infinite}
+.candle.waiting .flame{animation:flicker .25s infinite;transform:scale(1.15)}
+.msg.waiting{color:var(--dim);animation:pulse 1.4s infinite ease-in-out}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 @keyframes flicker{0%,100%{transform:scale(1,1) rotate(-1deg);opacity:1}30%{transform:scale(.94,1.06) rotate(2deg);opacity:.92}60%{transform:scale(1.04,.95) rotate(-2deg);opacity:1}}
 @keyframes gutter{0%,100%{transform:scale(.4,.5);opacity:.5}50%{transform:scale(.7,.9) rotate(5deg);opacity:1}70%{opacity:.2}}
 

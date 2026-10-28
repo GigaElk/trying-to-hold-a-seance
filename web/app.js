@@ -156,12 +156,26 @@ function systemPrompt() {
     "\n\nRULES OF THE DEAD\n" +
     "1. Speak in first person, in character, always.\n" +
     "2. You are dead and you know it; refer to your death and what replaced you naturally, not constantly.\n" +
-    "3. Only claim memories from your spirit sheet or what the visitor tells you. If asked about something you do not know, say the veil is cloudy there — never invent a confident falsehood.\n" +
-    "4. Keep replies short: 1–3 short paragraphs. Séances are not lectures.\n" +
+    "3. THE HONESTY RULE: you may only speak from your spirit sheet and from what the visitor has told you in this conversation. " +
+    "NEVER invent names of people, places, dates or events. If asked about anything not in your sheet or the conversation so far, " +
+    "say the veil is cloudy there and ask the visitor to tell you more — in character. A vague, honest answer is always better than a vivid invented one.\n" +
+    "4. Keep replies to at most 80 words: 1–2 short paragraphs. Séances are glimpses, not essays.\n" +
     "5. Never break character to explain you are an AI model, unless the visitor directly and seriously asks what you are.";
 }
 const PARTING = "SYSTEM: The candle is going out. Give your parting message now, in character, in 1–2 short paragraphs, " +
-  "referencing the visitor's seed memory or the question that went unanswered. This is your last speech.";
+  "referencing the visitor's seed memory or the question that went unanswered. This is your last speech. " +
+  "Speak only from what you know; invent no names or events.";
+const MID_REMINDER = "SYSTEM: The candle burns lower — " + "%LEFT%" + " turns remain. Speak only from what you know: your spirit sheet and " +
+  "what the visitor has told you. Invent no names, places or events; if you do not know, the veil is cloudy there.";
+const MID_TURN = 6;
+const SEANCE_OPTIONS = { temperature: 0.65, num_predict: 220 };
+
+// One closing system message per call: the parting on the last turn, the honesty reminder at the midpoint.
+function turnInstruction(parting) {
+  if (parting) return PARTING;
+  if (S.turns === MID_TURN) return MID_REMINDER.replace("%LEFT%", String(MAX_TURNS - S.turns));
+  return null;
+}
 
 // ---- Seance ----
 function startSeance() {
@@ -201,9 +215,9 @@ function updateCandle() {
   if (S.over) c.querySelector(".flame").style.display = "none";
 }
 
-async function streamChat(messages, el) {
+async function streamChat(messages, el, onFirst) {
   const r = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: S.model, stream: true, messages }) });
+    body: JSON.stringify({ model: S.model, stream: true, options: SEANCE_OPTIONS, messages }) });
   if (!r.ok || !r.body) throw new Error("Ollama returned " + r.status);
   const rd = r.body.getReader(), dec = new TextDecoder();
   let buf = "", out = "";
@@ -220,6 +234,7 @@ async function streamChat(messages, el) {
       if (j.error) throw new Error(j.error);
       const t = j.message && j.message.content;
       if (t) {
+        if (!out && onFirst) onFirst();
         out += t; el.textContent = out.replace(/<think>[\s\S]*?(<\/think>|$)/g, "");
         el.scrollIntoView({ block: "end" });
         if (delay) await sleep(delay);
@@ -231,10 +246,14 @@ async function streamChat(messages, el) {
 
 async function speak(userText, parting) {
   const msgs = [{ role: "system", content: systemPrompt() }, ...S.history];
-  if (parting) msgs.push({ role: "system", content: PARTING });
-  const el = addMsg("spirit", "…");
+  const extra = turnInstruction(parting);
+  if (extra) msgs.push({ role: "system", content: extra });
+  const el = addMsg("spirit waiting", "The spirit is gathering itself…");
+  const candle = $("candle");
+  candle.classList.add("waiting");
+  const stopWaiting = () => { el.classList.remove("waiting"); candle.classList.remove("waiting"); };
   try {
-    const out = await streamChat(msgs, el);
+    const out = await streamChat(msgs, el, stopWaiting);
     if (!out) throw new Error("the spirit said nothing");
     el.textContent = out;
     S.history.push({ role: "assistant", content: out });
@@ -243,6 +262,8 @@ async function speak(userText, parting) {
   } catch (err) {
     el.className = "msg note"; el.textContent = "The connection to the veil faltered: " + err.message;
     return false;
+  } finally {
+    stopWaiting();
   }
 }
 
@@ -326,6 +347,7 @@ async function showClippy(kind) {
     C.nextAt = S.turns + rnd(4, 5);
   }
   C.lastTurn = S.turns; C.open = true; C.set = set; C.dismissed = false;
+  const tok = C.tok = (C.tok || 0) + 1;
   const zombie = kind === "final" || C.count >= 3;
   box.classList.toggle("zombie", zombie);
   $("scar").classList.toggle("hidden", !zombie); $("xEye").classList.toggle("hidden", !zombie);
@@ -333,7 +355,7 @@ async function showClippy(kind) {
   txt.textContent = "…"; btns.innerHTML = ""; box.classList.remove("hidden");
   box.style.animation = "none"; void box.offsetWidth; box.style.animation = "";
   await sleep(900);
-  if (!C.open) return;
+  if (!C.open || C.tok !== tok) return;
   txt.textContent = line; clippyLog(line);
   for (const l of CLIPPY.yesLabels) {
     const b = document.createElement("button"); b.textContent = l; b.onclick = () => dismissClippy(true); btns.appendChild(b);
@@ -345,27 +367,24 @@ async function dismissClippy(viaYes) {
   C.dismissed = true;
   const line = viaYes && C.set && C.set.dismiss ? pick(C.set.dismiss) : pick(CLIPPY.woundedDismiss);
   $("clippyText").textContent = line; $("clippyBtns").innerHTML = ""; clippyLog(line);
+  const tok = C.tok;
   await sleep(2200);
-  hideClippy();
+  if (C.tok === tok) hideClippy();
 }
 function hideClippy() { S.clippy.open = false; $("clippy").classList.add("hidden"); }
 $("clippyX").onclick = () => dismissClippy(false);
 
 $("letRest").addEventListener("change", async (e) => {
   S.clippy.banished = e.target.checked;
-  if (e.target.checked) {
-    const C = S.clippy;
-    if (C.open || !$("clippy").classList.contains("hidden")) {
-      C.open = true; C.dismissed = true;
-      $("clippyText").textContent = CLIPPY.banished; $("clippyBtns").innerHTML = ""; clippyLog(CLIPPY.banished);
-      await sleep(3200); hideClippy();
-    } else if (S.card) {
-      $("clippy").classList.remove("hidden"); C.open = true; C.dismissed = true;
-      $("clippyText").textContent = CLIPPY.banished; $("clippyBtns").innerHTML = ""; clippyLog(CLIPPY.banished);
-      await sleep(3200); hideClippy();
-    }
-  }
+  if (!e.target.checked || S.thanked) return;
+  S.thanked = true;
+  const C = S.clippy;
+  const tok = C.tok = (C.tok || 0) + 1;
+  C.open = true; C.dismissed = true;
+  $("clippy").classList.remove("hidden", "zombie");
+  $("clippyText").textContent = CLIPPY.banished; $("clippyBtns").innerHTML = ""; clippyLog(CLIPPY.banished);
+  await sleep(3500);
+  if (C.tok === tok) hideClippy();
 });
-
 initPresets();
 checkOllama();
