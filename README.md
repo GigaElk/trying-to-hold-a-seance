@@ -86,3 +86,8 @@ A ghost hosted on someone else's server can be deprecated and switched off mid-c
 ## Licence
 
 MIT — see [LICENSE](LICENSE).
+
+## Polish
+
+Small effects: a one-time arrival flare, a smoke wisp and one-second silence when the candle dies, a hard-edged Clippy window that pops in, warm chip hover/focus, and a paperclip favicon. All motion is disabled under `prefers-reduced-motion`. There is no sound.
+

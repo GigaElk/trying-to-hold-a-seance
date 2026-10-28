@@ -102,7 +102,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 @keyframes manifest{from{opacity:.2;filter:blur(3px);letter-spacing:.12em}to{opacity:1;filter:none;letter-spacing:normal}}
 .chatForm{display:flex;gap:.5em}.chatForm input{margin:0}
 
-.clippy{position:fixed;right:16px;bottom:16px;z-index:10;display:flex;flex-direction:column;align-items:flex-end;gap:2px;animation:bounceIn .6s}
+.clippy{position:fixed;right:16px;bottom:16px;z-index:10;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
 .clippy .win{width:260px;background:#ece9d8;color:#000;border:2px solid #0a246a;font:13px Tahoma,Verdana,sans-serif;box-shadow:3px 3px 0 rgba(0,0,0,.5)}
 .clippy .title{background:linear-gradient(90deg,#0a246a,#3a6ea5);color:#fff;padding:2px 4px;display:flex;justify-content:space-between;align-items:center}
 .clippy .title button{padding:0 6px;font-size:11px;background:#ece9d8;color:#000;border:1px outset #fff;border-radius:0}
@@ -116,4 +116,20 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 .clippy[data-stage="3"] svg #wire,.clippy[data-stage="4"] svg #wire{stroke:#7a9a5a}
 .clippy[data-stage="2"] svg #wire{stroke:#8a9a8f}
 .clippy[data-stage="4"] svg #wire{stroke:#4f7a3a}
-@keyframes bounceIn{0%{transform:translateY(140%)}60%{transform:translateY(-12px)}80%{transform:translateY(4px)}100%{transform:none}}
+@keyframes bounceIn{0%{transform:scale(.94)}100%{transform:none}}
+.clippy{animation:bounceIn .12s steps(2,end)}
+.clippy,.clippy *{transition:none!important}
+
+/* Polish: arrival flare, candlelit chips */
+.candle.arrive .flame{animation:arriveFlare .9s ease-out 1}
+body.arrival::before{animation:arrivalPulse .9s ease-out 1}
+@keyframes arriveFlare{0%{transform:scale(1);box-shadow:0 0 30px 12px rgba(255,170,50,.35)}35%{transform:scale(1.5,1.35);box-shadow:0 0 60px 26px rgba(255,190,80,.6)}100%{transform:scale(1);box-shadow:0 0 30px 12px rgba(255,170,50,.35)}}
+@keyframes arrivalPulse{0%,100%{opacity:var(--dark,0)}40%{opacity:calc(var(--dark,0) + .06)}}
+.presets button{transition:box-shadow .25s,border-color .25s,background .25s}
+.presets button:hover,.presets button:focus-visible{border-color:#c98a4a;background:#33243a;box-shadow:0 0 14px 2px rgba(255,170,60,.28),inset 0 0 10px rgba(255,170,60,.12);outline:none}
+.presets button:focus-visible{outline:2px solid #e6b36a;outline-offset:2px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .candle.out .smoke{opacity:.5}
+}
