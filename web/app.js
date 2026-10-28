@@ -97,14 +97,11 @@ $("cardForm").addEventListener("submit", async (e) => {
 
 // ---- Spirit Forge ----
 const FORGE_SYSTEM = "You are the keeper of the veil. From this description of the dead, forge a spirit. " +
-  "Reply with JSON only, exactly these keys: " +
-  '{"name":"string","epithet":"string, e.g. \'the messenger who carried a million first crushes\'",' +
-  '"voice":"string: how it speaks - era, register, quirks","verbal_tics":["string","string"],' +
-  '"memories":["the visitor\'s seed memory expanded","two more plausible era memories"],' +
-  '"unfinished_business":"string: what it still wants or needs",' +
-  '"temperament":"string, e.g. \'warm, a little vain, still hurt about being replaced\'",' +
-  '"arrival_line":"string: its first words on being summoned, in character"}';
-
+  "Reply with JSON only, using exactly these keys: name, epithet (a short phrase such as 'the messenger who carried a million first crushes'), " +
+  "voice (how it speaks: era, register, quirks), verbal_tics (array of 2 short strings), " +
+  "memories (array of 3 strings: the visitor's seed memory expanded, plus two more plausible memories from its era), " +
+  "unfinished_business (what it still wants or needs), temperament (a few words such as 'warm, a little vain, still hurt about being replaced'), " +
+  "arrival_line (its first words on being summoned, in character). Keep every value brief.\n\n";
 async function forgeSpirit(card) {
   let user = "Name: " + card.name + "\nWhat it was: " + card.kind + "\nDied: " + (card.died || "unknown") +
     "\nSeed memory from the visitor: " + card.memory +
@@ -114,7 +111,7 @@ async function forgeSpirit(card) {
   for (let i = 0; i < 2; i++) {
     try {
       const r = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: S.model, stream: false, format: "json", think: false,
+        body: JSON.stringify({ model: S.model, stream: false, format: "json", options: { num_predict: 800, repeat_penalty: 1.1 },
           messages: [{ role: "system", content: FORGE_SYSTEM }, { role: "user", content: user }] }) });
       if (!r.ok) throw new Error("Ollama returned " + r.status);
       const data = await r.json();
@@ -131,13 +128,16 @@ function parseJson(t) {
   return JSON.parse(m[0]);
 }
 function normalizeSheet(j, card) {
-  const arr = (v) => (Array.isArray(v) ? v.map(String) : v ? [String(v)] : []);
+  const str = (v) => (v && typeof v === "object"
+    ? (Array.isArray(v) ? v.map(str).join("; ") : Object.entries(v).map(([k, x]) => k + ": " + str(x)).join("; "))
+    : String(v));
+  const arr = (v) => (Array.isArray(v) ? v.map(str) : v ? [str(v)] : []);
   const s = {
-    name: String(j.name || card.name), epithet: String(j.epithet || "the departed"),
-    voice: String(j.voice || "quiet, old-fashioned"), verbal_tics: arr(j.verbal_tics),
-    memories: arr(j.memories), unfinished_business: String(j.unfinished_business || "unknown"),
-    temperament: String(j.temperament || "wistful"),
-    arrival_line: String(j.arrival_line || "…is someone there?"),
+    name: str(j.name || card.name), epithet: str(j.epithet || "the departed"),
+    voice: str(j.voice || "quiet, old-fashioned"), verbal_tics: arr(j.verbal_tics),
+    memories: arr(j.memories), unfinished_business: str(j.unfinished_business || "unknown"),
+    temperament: str(j.temperament || "wistful"),
+    arrival_line: str(j.arrival_line || "…is someone there?"),
   };
   if (!s.memories.length) s.memories = [card.memory];
   return s;
@@ -203,7 +203,7 @@ function updateCandle() {
 
 async function streamChat(messages, el) {
   const r = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: S.model, stream: true, think: false, messages }) });
+    body: JSON.stringify({ model: S.model, stream: true, messages }) });
   if (!r.ok || !r.body) throw new Error("Ollama returned " + r.status);
   const rd = r.body.getReader(), dec = new TextDecoder();
   let buf = "", out = "";
