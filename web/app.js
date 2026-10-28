@@ -50,7 +50,7 @@ async function checkOllama() {
 }
 function setupHtml(m) {
   return "<p>Set up the ghost's house:</p><ol><li>Install Ollama from <b>ollama.com</b> and start it.</li>" +
-    "<li>Run <code>ollama pull " + m + "</code> (low-end machine? <code>ollama pull gemma3:4b</code>).</li>" +
+    "<li>Run <code>ollama pull " + escapeHtml(m) + "</code> (low-end machine? <code>ollama pull gemma3:4b</code>).</li>" +
     "<li><button id=\"recheck\" type=\"button\">Check again</button></li></ol>";
 }
 document.addEventListener("click", (e) => { if (e.target.id === "recheck") checkOllama(); });
